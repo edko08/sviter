@@ -20,9 +20,14 @@ public class MyMassage {
     public MyMassage() {
     }
 
-    public MyMassage(String text, String tag) {
+    public MyMassage(String text, String tag, User user) {
+        this.author = user;
         this.text = text;
         this.tag = tag;
+    }
+
+    public String getAuthorName() {
+        return author != null ? author.getUsername() : "<none>";
     }
 
     public User getAuthor() {

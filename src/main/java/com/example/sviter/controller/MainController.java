@@ -1,8 +1,10 @@
 package com.example.sviter.controller;
 
 import com.example.sviter.domain.MyMassage;
+import com.example.sviter.domain.User;
 import com.example.sviter.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +17,8 @@ import java.util.Map;
 
 @Controller
 public class MainController {
-    private final MessageRepository  messageRepository;
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Autowired
     public MainController(MessageRepository messageRepository) {
@@ -35,8 +38,12 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-        MyMassage message = new MyMassage(text, tag);
+    public String add(
+            @AuthenticationPrincipal User user,
+            @RequestParam String text,
+            @RequestParam String tag,
+            Map<String, Object> model) {
+        MyMassage message = new MyMassage(text, tag, user);
         messageRepository.save(message);
         Iterable<MyMassage> messages = messageRepository.findAll();
         model.put("messages", messages);
