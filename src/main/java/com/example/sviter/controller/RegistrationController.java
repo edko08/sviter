@@ -3,7 +3,6 @@ package com.example.sviter.controller;
 import com.example.sviter.repository.UserRepo;
 import com.example.sviter.domain.Role;
 import com.example.sviter.domain.User;
-import com.example.sviter.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,8 @@ public class RegistrationController {
     private UserRepo userRepo;
 
     @GetMapping("/registration")
-    public String registration() {
+    public String registration(Map<String, Object> model) {
+        model.put("message", "");
         return "registration";
     }
 
