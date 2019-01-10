@@ -1,8 +1,10 @@
 package com.example.sviter.domain;
 
+import org.hibernate.validator.constraints.Length;
 import sun.plugin2.message.Message;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class MyMassage {
@@ -10,7 +12,11 @@ public class MyMassage {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+
+    @NotBlank(message = "Please fill the message")
+    @Length(max = 2048, message = "Message too long (more than 2kB)")
     private String text;
+    @Length(max = 255, message = "Message too long (more than 255)")
     private String tag;
 
     @ManyToOne(fetch = FetchType.EAGER)
