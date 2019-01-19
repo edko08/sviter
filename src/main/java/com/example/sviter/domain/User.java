@@ -3,11 +3,13 @@ package com.example.sviter.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "usr")
@@ -31,6 +33,24 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<MyMassage> messages;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
+
 
     public boolean isAdmin() {
         return roles.contains(Role.ADMIN);
@@ -117,4 +137,11 @@ public class User implements UserDetails {
         this.activationCode = activationCode;
     }
 
+    public Set<MyMassage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<MyMassage> messages) {
+        this.messages = messages;
+    }
 }
