@@ -14,7 +14,7 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-/*    public Page<MyMassage> messageList(Pageable pageable, String filter, User user) {
+    public Page<MyMassage> messageList(Pageable pageable, String filter) {
         if (filter != null && !filter.isEmpty()) {
             return messageRepository.findByTag(filter, pageable);
         } else {
@@ -24,6 +24,6 @@ public class MessageService {
     }
 
     public Page<MyMassage> messageListForUser(Pageable pageable, User currentUser, User author) {
-        return messageRepository.findByUser(pageable, author, currentUser);
-    }*/
+        return messageRepository.findByUser(pageable, author);
+    }
 }

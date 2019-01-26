@@ -3,6 +3,7 @@ package com.example.sviter.controller;
 import com.example.sviter.domain.MyMassage;
 import com.example.sviter.domain.User;
 import com.example.sviter.repository.MessageRepository;
+import com.example.sviter.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,9 @@ class MessageController {
     @Autowired
     private MessageRepository messageRepository;
 
+    @Autowired
+    private MessageService messageService;
+
     @Value("${upload.path}")
     private String uploadPath;
 
@@ -47,13 +51,7 @@ class MessageController {
             Model model,
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<MyMassage> page;
-
-        if (filter != null && !filter.isEmpty()) {
-            page = messageRepository.findByTag(filter, pageable);
-        } else {
-            page = messageRepository.findAll(pageable);
-        }
+        Page<MyMassage> page = messageService.messageList(pageable, filter);
 
         model.addAttribute("page", page);
         model.addAttribute("url", "/main");
@@ -117,9 +115,7 @@ class MessageController {
             @RequestParam(required = false) MyMassage message,
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<MyMassage> page;
-
-        page = messageRepository.findAll(pageable);
+        Page<MyMassage> page = messageService.messageListForUser(pageable,currentUser,author);
 
         model.addAttribute("userChannel", author);
         model.addAttribute("subscriptionsCount", author.getSubscriptions().size());
