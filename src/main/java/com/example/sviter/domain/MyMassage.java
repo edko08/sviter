@@ -1,10 +1,13 @@
 package com.example.sviter.domain;
 
+import com.example.sviter.domain.dto.util.MessageHelper;
 import org.hibernate.validator.constraints.Length;
 import sun.plugin2.message.Message;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "message")
@@ -26,6 +29,14 @@ public class MyMassage {
 
     private String filename;
 
+    @ManyToMany
+    @JoinTable(
+            name = "message_likes",
+            joinColumns = { @JoinColumn(name = "message_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id")}
+    )
+    private Set<User> likes = new HashSet<>();
+
     public MyMassage() {
     }
 
@@ -36,15 +47,7 @@ public class MyMassage {
     }
 
     public String getAuthorName() {
-        return author != null ? author.getUsername() : "<none>";
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
+        return MessageHelper.getAuthorName(author);
     }
 
     public User getAuthor() {
@@ -55,6 +58,14 @@ public class MyMassage {
         this.author = author;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+
     public Long getId() {
         return id;
     }
@@ -63,19 +74,27 @@ public class MyMassage {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getTag() {
         return tag;
     }
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public Set<User> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<User> likes) {
+        this.likes = likes;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
